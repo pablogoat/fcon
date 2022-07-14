@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+    <head>
+
+        <style type="text/css">
+            .sidenav {
+                height: 80px;
+                width: 100%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                overflow-x: hidden;
+                background-color: #4E45FC;
+                padding-top: 35px;
+                
+            }
+
+            .sidenav a {
+                padding: 6px 8px 6px 16px;
+                text-decoration: none;
+                font-size: 30px;
+                color: blue;
+            }
+
+            .sidenav a:hover {
+                color: blanchedalmond;
+            }
+
+            .main {
+                margin-top: 130px;
+                margin-left: 180px;
+                padding: 0px 10px;
+            }
+        </style>
+
+        <title>Friend Reckoning App</title>
+    </head>
+
+    <body>
+
+        <div class="sidenav">
+            <a href="/">Home Page</a>
+            <a>Test nav</a>
+            <a>second test</a>
+        </div>
+
+        <div class="main">
+            {% block content %}
+            base
+            {% endblock %}
+        </div>
+    <body>
+
+</html>
