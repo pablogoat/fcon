@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <h3>Create New Sheet</h3>
+    <form method="post" action="/create/">
+        {% csrf_token %}
+        <div> 
+            <p>Name of the sheet: {{form.name}}</p>
+            <p>People count: {{form.count}}</p>
+            <div>
+                <button type="submit", name="save">Create</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
