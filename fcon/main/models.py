@@ -29,6 +29,7 @@ class Item(models.Model):
 class Debetor(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    share = models.IntegerField(null=True)
 
     def __str__(self):
         return self.person.name
