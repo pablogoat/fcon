@@ -2,11 +2,18 @@
 
 {% block content %}
     <div>
-        <p>Your sheets:</p>
+        <h3>Your sheets:</h3>
         <div>
-            {% for item in sheets %}
-                <p>{{item.name}}</p>
-            {% endfor %}
+            <form method="post" ,action="sheets/">
+                {% csrf_token %}
+                {% for item in sheets %}
+                <p>
+                    {{item.name}}
+                    <button type="submit", name="edit", value="{{item.name}}">Edit</button>
+                </p>
+                {% endfor %}
+            </form>
+            
         </div>
     </div>
 {% endblock content %}

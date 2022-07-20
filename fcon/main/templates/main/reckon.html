@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <h3>{{view.name}}</h3>
+    <div>
+        <form method="post", action="/reckon/{{view.name}}">
+            {% csrf_token %}
+            <button type="submit", name="delete", value="{{view.name}}">Delete this sheet</button>
+        </form>
+        
+    </div>
+{% endblock content %}
