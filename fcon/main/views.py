@@ -41,6 +41,12 @@ def reckon(response, name):
             view = Sheet.objects.get(name=response.POST.get("delete"))
             view.delete()
             return HttpResponseRedirect('/sheets/', {})
+        elif response.POST.get("addperson"):
+            view = Sheet.objects.get(name=response.POST.get("addperson"))
+            return HttpResponseRedirect('/sheets/', {})
+        elif response.POST.get("additem"):
+            view = Sheet.objects.get(name=response.POST.get("additem"))
+            return HttpResponseRedirect('/sheets/', {})
         else:
             return HttpResponseRedirect('/', {})
 
