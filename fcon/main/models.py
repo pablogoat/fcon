@@ -12,7 +12,7 @@ class Sheet(models.Model):
 class Person(models.Model):
     sheet = models.ForeignKey(Sheet, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
-    balance = models.FloatField()
+    balance = models.FloatField(default=0)
 
     def __str__(self):
         return self.name

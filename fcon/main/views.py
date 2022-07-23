@@ -2,7 +2,7 @@ from unicodedata import name
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 
-from main.models import Sheet
+from main.models import Person, Sheet
 from .forms import sheetCreator
 
 # Create your views here.
@@ -40,12 +40,20 @@ def reckon(response, name):
         if response.POST.get("delete"):
             view = Sheet.objects.get(name=response.POST.get("delete"))
             view.delete()
+
             return HttpResponseRedirect('/sheets/', {})
         elif response.POST.get("addperson"):
             view = Sheet.objects.get(name=response.POST.get("addperson"))
+            
+            if response.POST.get("data"):
+                person = Person(sheet=view, name=response.POST.get("data"))
+                print(person)
+                person.save()
+
             return HttpResponseRedirect('/sheets/', {})
         elif response.POST.get("additem"):
             view = Sheet.objects.get(name=response.POST.get("additem"))
+
             return HttpResponseRedirect('/sheets/', {})
         else:
             return HttpResponseRedirect('/', {})
@@ -53,4 +61,5 @@ def reckon(response, name):
     else:
         view = Sheet.objects.get(name=name)
         print(view)
-        return render(response, "main/reckon.html", {"view": view})
+        people = [i for i in Person.objects.filter(sheet=view)]
+        return render(response, "main/reckon.html", {"view": view, "people": people})

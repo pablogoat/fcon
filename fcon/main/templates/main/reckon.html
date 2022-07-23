@@ -6,8 +6,29 @@
         <form method="post", action="/reckon/{{view.name}}">
             {% csrf_token %}
             <button type="submit", name="delete", value="{{view.name}}">Delete this sheet</button>
-            <button type="submit", name="addperson", value="{{view.name}}">Add a new person to the sheet</button>
-            <button type="submit", name="additem", value="{{view.name}}">Add new item to the sheet</button>
+            <div>
+                <p>
+                    <input type="text", name="data">
+                    <button type="submit", name="addperson", value="{{view.name}}">Add a new person to the sheet</button>                    
+                </p>
+                <p>
+                    <input list="participants">
+
+                    <datalist id="participants">
+                        {% for i in people %}
+                            <option value="{{i}}">{{i.name}}</option>
+                        {% endfor %}
+                    </datalist>
+
+                    <button type="submit", name="additem", value="{{view.name}}">Add new item to the sheet</button> 
+                </p>            
+            </div>
+            <div>
+                <h3>Participants</h3>
+                {% for i in people %}
+                    <p>{{i.name}}</p>
+                {% endfor %}
+            </div>
         </form>
         
     </div>
