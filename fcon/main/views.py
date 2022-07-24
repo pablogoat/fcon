@@ -2,7 +2,7 @@ from unicodedata import name
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 
-from main.models import Person, Sheet
+from main.models import Person, Sheet, Item, Debetor
 from .forms import sheetCreator
 
 # Create your views here.
@@ -54,6 +54,27 @@ def reckon(response, name):
         elif response.POST.get("additem"):
             view = Sheet.objects.get(name=response.POST.get("additem"))
 
+            postItem = response.POST.get("item")
+            postPay = response.POST.get("pay")
+            postValue = float("{:.2f}".format(float(response.POST.get("value"))))
+
+            if postItem and postPay and postValue:                
+                if Person.objects.filter(sheet=view, name=postPay).exists():
+                    new_item = Item(sheet=view, person=Person.objects.get(sheet=view, name=postPay), name=postItem, value=postValue)
+                    print(new_item)
+                    test = Person.objects.get(sheet=view, name=postPay)
+                    test.balance -= postValue
+                    test.save()
+                    new_item.save()
+                else:
+                    newPerson = Person(sheet=view, name=postPay, balance=-postValue)
+                    print(newPerson)
+                    newPerson.save()
+
+                    new_item = Item(sheet=view, person=newPerson, name=postItem, value=postValue)
+                    print(new_item)
+                    new_item.save()
+
             return HttpResponseRedirect('/sheets/', {})
         else:
             return HttpResponseRedirect('/', {})
@@ -62,4 +83,5 @@ def reckon(response, name):
         view = Sheet.objects.get(name=name)
         print(view)
         people = [i for i in Person.objects.filter(sheet=view)]
-        return render(response, "main/reckon.html", {"view": view, "people": people})
+        items = [i for i in Item.objects.filter(sheet=view)]
+        return render(response, "main/reckon.html", {"view": view, "people": people, "items": items})

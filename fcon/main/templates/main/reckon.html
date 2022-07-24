@@ -12,7 +12,7 @@
                     <button type="submit", name="addperson", value="{{view.name}}">Add a new person to the sheet</button>                    
                 </p>
                 <p>
-                    <input list="participants">
+                    <input list="participants" name="pay">
 
                     <datalist id="participants">
                         {% for i in people %}
@@ -20,13 +20,22 @@
                         {% endfor %}
                     </datalist>
 
+                    <input type="text", name="item">
+                    <input type="text", name="value">
+
                     <button type="submit", name="additem", value="{{view.name}}">Add new item to the sheet</button> 
                 </p>            
             </div>
             <div>
                 <h3>Participants</h3>
                 {% for i in people %}
-                    <p>{{i.name}}</p>
+                    <p>{{i.name}}: {{i.balance}}</p>
+                {% endfor %}
+            </div>
+            <div>
+                <h3>Items</h3>
+                {% for it in items %}
+                    <p>{{it.name}}: {{it.value}} - {{it.person}}</p>
                 {% endfor %}
             </div>
         </form>
