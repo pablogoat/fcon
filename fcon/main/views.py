@@ -8,6 +8,7 @@ from .forms import sheetCreator
 # Create your views here.
 
 def home(response):
+
     return render(response, "main/home.html", {})
 
 def create(response):
@@ -22,16 +23,19 @@ def create(response):
         return HttpResponseRedirect('/', {})
     else:
         form = sheetCreator()
+
         return render(response, "main/create.html", {"form": form})
 
 def allsheets(response):
 
     if response.method == 'POST':
         print(response.POST)
+
         return HttpResponseRedirect('/reckon/%s' %response.POST.get("edit"))
 
     else:
         t = Sheet.objects.all()
+
         return render(response, "main/sheets.html", {"sheets": t})
 
 def reckon(response, name):
@@ -75,7 +79,7 @@ def reckon(response, name):
                     print(new_item)
                     new_item.save()
 
-            return HttpResponseRedirect('/sheets/', {})
+            return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
         else:
             return HttpResponseRedirect('/', {})
 
@@ -84,4 +88,42 @@ def reckon(response, name):
         print(view)
         people = [i for i in Person.objects.filter(sheet=view)]
         items = [i for i in Item.objects.filter(sheet=view)]
+
         return render(response, "main/reckon.html", {"view": view, "people": people, "items": items})
+
+def debet(response, name, new_item): #function for spliting expense among people
+
+    view = Sheet.objects.get(name=name)
+
+    if response.method == 'POST':
+        sum_share = 100
+        count = 0
+
+        for person in Person.objects.filter(sheet=view):
+            if response.POST.get(person.name) == 'clicked':
+                count += 1
+                if response.POST.get('d' + person.name) != '':
+                    sum_share -= float("{:.2f}".format(float(response.POST.get('d' + person.name))))
+                    count -= 1
+            print(count)
+                
+
+        for p in Person.objects.filter(sheet=view):
+            if response.POST.get(p.name) == 'clicked':
+                if response.POST.get('d' + p.name) != '':
+                    new_debetor = Debetor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=float("{:.2f}".format(float(response.POST.get('d' + p.name)))))
+                else:
+                    print(count)
+                    new_debetor = Debetor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=sum_share/count)
+                    sum_share -= new_debetor.share
+                    count -= 1
+                new_debetor.save()
+                print(str(new_debetor.item) + " " + new_debetor.person.name + " " + str(new_debetor.share))
+        
+        return HttpResponseRedirect('/sheets/', {})
+
+    
+    else:
+        debt = [i for i in Person.objects.filter(sheet=view)]
+
+        return render(response, "main/debet.html", {"debt": debt, "view": view, "item": Item.objects.get(sheet=view, name=new_item)})
