@@ -8,11 +8,19 @@
             <button type="submit", name="delete", value="{{view.name}}">Delete this sheet</button>
             <div>
                 <p>
+                    <input type="text" readonly="readonly" width="40" value="Name">
+                </p>
+                <p>
                     <input type="text", name="data">
                     <button type="submit", name="addperson", value="{{view.name}}">Add a new person to the sheet</button>                    
                 </p>
+                <div>
+                    <input type="text" readonly="readonly" width="40" value="Buyer">
+                    <input type="text" readonly="readonly" width="40" value="Item">
+                    <input type="text" readonly="readonly" width="40" value="Cost">
+                </div>
                 <p>
-                    <input list="participants" name="pay">
+                    <input list="participants" name="pay" width="40">
 
                     <datalist id="participants">
                         {% for i in people %}
@@ -20,8 +28,8 @@
                         {% endfor %}
                     </datalist>
 
-                    <input type="text", name="item">
-                    <input type="text", name="value">
+                    <input type="text", name="item" width="40">
+                    <input type="text", name="value" width="40">
 
                     <button type="submit", name="additem", value="{{view.name}}">Add new item to the sheet</button> 
                 </p>            
