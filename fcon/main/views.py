@@ -117,6 +117,8 @@ def debet(response, name, new_item): #function for spliting expense among people
                     new_debetor = Debetor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=sum_share/count)
                     sum_share -= new_debetor.share
                     count -= 1
+                new_debetor.person.balance += new_debetor.item.value * new_debetor.share/100
+                new_debetor.person.save()
                 new_debetor.save()
                 print(str(new_debetor.item) + " " + new_debetor.person.name + " " + str(new_debetor.share))
         
