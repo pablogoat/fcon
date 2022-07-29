@@ -26,7 +26,7 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-class Debetor(models.Model):
+class Debtor(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     share = models.FloatField(null=True)

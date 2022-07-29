@@ -1,9 +1,11 @@
+from ctypes import sizeof
 from unicodedata import name
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 
-from main.models import Person, Sheet, Item, Debetor
+from main.models import Person, Sheet, Item, Debtor
 from .forms import sheetCreator
+from main.transaction import transaction
 
 # Create your views here.
 
@@ -80,6 +82,10 @@ def reckon(response, name):
                     new_item.save()
 
             return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
+        elif response.POST.get("show"):
+            view = Sheet.objects.get(name=response.POST.get("show"))
+            
+            return HttpResponseRedirect('/{}/transactions'.format(view.name))
         else:
             return HttpResponseRedirect('/', {})
 
@@ -111,16 +117,16 @@ def debet(response, name, new_item): #function for spliting expense among people
         for p in Person.objects.filter(sheet=view):
             if response.POST.get(p.name) == 'clicked':
                 if response.POST.get('d' + p.name) != '':
-                    new_debetor = Debetor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=float("{:.2f}".format(float(response.POST.get('d' + p.name)))))
+                    new_Debtor = Debtor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=float("{:.2f}".format(float(response.POST.get('d' + p.name)))))
                 else:
                     print(count)
-                    new_debetor = Debetor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=sum_share/count)
-                    sum_share -= new_debetor.share
+                    new_Debtor = Debtor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=sum_share/count)
+                    sum_share -= new_Debtor.share
                     count -= 1
-                new_debetor.person.balance += new_debetor.item.value * new_debetor.share/100
-                new_debetor.person.save()
-                new_debetor.save()
-                print(str(new_debetor.item) + " " + new_debetor.person.name + " " + str(new_debetor.share))
+                new_Debtor.person.balance += new_Debtor.item.value * new_Debtor.share/100
+                new_Debtor.person.save()
+                new_Debtor.save()
+                print(str(new_Debtor.item) + " " + new_Debtor.person.name + " " + str(new_Debtor.share))
         
         return HttpResponseRedirect('/sheets/', {})
 
@@ -129,3 +135,38 @@ def debet(response, name, new_item): #function for spliting expense among people
         debt = [i for i in Person.objects.filter(sheet=view)]
 
         return render(response, "main/debet.html", {"debt": debt, "view": view, "item": Item.objects.get(sheet=view, name=new_item)})
+
+def transactions(response, name): #function that shows transactions needed to complete the reckoning
+    view = Sheet.objects.get(name=name)
+    debtors = [person for person in Person.objects.filter(sheet=view) if person.balance > 0]
+    collectors = [person for person in Person.objects.filter(sheet=view) if person.balance < 0]
+
+    debtors.sort(reverse=True, key=PersonCmp)
+    collectors.sort(reverse=True, key=PersonCmp)
+
+    print(debtors)
+    print(collectors)
+
+    actions = []
+
+    while len(debtors) and len(collectors):
+        if debtors[0].balance < collectors[0].balance * -1:
+            actions.append(transaction(debtors[0].name,str(debtors[0].balance),collectors[0].name))
+            collectors[0].balance += debtors[0].balance
+            debtors.pop(0)
+        elif debtors[0].balance == collectors[0].balance * -1:
+            actions.append(transaction(debtors[0].name,str(debtors[0].balance),collectors[0].name))
+            collectors.pop(0)
+            debtors.pop(0)
+        else:
+            actions.append(transaction(debtors[0].name,str(collectors[0].balance * -1),collectors[0].name))
+            debtors[0].balance += collectors[0].balance
+            collectors.pop(0)
+
+    print(actions)
+
+    return render(response, 'main/transactions.html', {"actions": actions})
+
+def PersonCmp(p1):
+    
+    return p1.balance
