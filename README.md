@@ -10,5 +10,4 @@ To Do:
 - display information about debetors for each item
 - labels
 - validating input
-- fix floats !!
 - fix cancel during choosing debtors

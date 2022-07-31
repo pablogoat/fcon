@@ -62,7 +62,7 @@ def reckon(response, name):
 
             postItem = response.POST.get("item")
             postPay = response.POST.get("pay")
-            postValue = float("{:.2f}".format(float(response.POST.get("value"))))
+            postValue = float(response.POST.get("value"))
 
             if postItem and postPay and postValue:                
                 if Person.objects.filter(sheet=view, name=postPay).exists():
@@ -93,6 +93,8 @@ def reckon(response, name):
         view = Sheet.objects.get(name=name)
         print(view)
         people = [i for i in Person.objects.filter(sheet=view)]
+        for item in Item.objects.filter(sheet=view):
+            item.value = round(item.value,2)
         items = [i for i in Item.objects.filter(sheet=view)]
 
         return render(response, "main/reckon.html", {"view": view, "people": people, "items": items})
@@ -109,7 +111,7 @@ def debet(response, name, new_item): #function for spliting expense among people
             if response.POST.get(person.name) == 'clicked':
                 count += 1
                 if response.POST.get('d' + person.name) != '':
-                    sum_share -= float("{:.2f}".format(float(response.POST.get('d' + person.name))))
+                    sum_share -= float(response.POST.get('d' + person.name))
                     count -= 1
             print(count)
                 
@@ -117,13 +119,13 @@ def debet(response, name, new_item): #function for spliting expense among people
         for p in Person.objects.filter(sheet=view):
             if response.POST.get(p.name) == 'clicked':
                 if response.POST.get('d' + p.name) != '':
-                    new_Debtor = Debtor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=float("{:.2f}".format(float(response.POST.get('d' + p.name)))))
+                    new_Debtor = Debtor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=float(response.POST.get('d' + p.name)))
                 else:
                     print(count)
                     new_Debtor = Debtor(person=p, item=Item.objects.get(sheet=view, name=new_item), share=sum_share/count)
                     sum_share -= new_Debtor.share
                     count -= 1
-                new_Debtor.person.balance += new_Debtor.item.value * new_Debtor.share/100
+                new_Debtor.person.balance += float(new_Debtor.item.value * new_Debtor.share/100)
                 new_Debtor.person.save()
                 new_Debtor.save()
                 print(str(new_Debtor.item) + " " + new_Debtor.person.name + " " + str(new_Debtor.share))
@@ -151,15 +153,15 @@ def transactions(response, name): #function that shows transactions needed to co
 
     while len(debtors) and len(collectors):
         if debtors[0].balance < collectors[0].balance * -1:
-            actions.append(transaction(debtors[0].name,str(debtors[0].balance),collectors[0].name))
+            actions.append(transaction(debtors[0].name,str(round(debtors[0].balance,2)),collectors[0].name))
             collectors[0].balance += debtors[0].balance
             debtors.pop(0)
         elif debtors[0].balance == collectors[0].balance * -1:
-            actions.append(transaction(debtors[0].name,str(debtors[0].balance),collectors[0].name))
+            actions.append(transaction(debtors[0].name,str(round(debtors[0].balance,2)),collectors[0].name))
             collectors.pop(0)
             debtors.pop(0)
         else:
-            actions.append(transaction(debtors[0].name,str(collectors[0].balance * -1),collectors[0].name))
+            actions.append(transaction(debtors[0].name,str(round(collectors[0].balance * -1,2)),collectors[0].name))
             debtors[0].balance += collectors[0].balance
             collectors.pop(0)
 
