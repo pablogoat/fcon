@@ -38,13 +38,16 @@
             <div>
                 <h3>Participants</h3>
                 {% for i in people %}
-                    <p>{{i.name}}</p>
+                    <p>{{i.name}} : {{i.balance}}</p>
                 {% endfor %}
             </div>
             <div>
                 <h3>Items</h3>
                 {% for i in items %}
-                    <p>{{i.name}}: {{i.value}} - {{i.person}}</p>
+                    <p> 
+                        {{i.name}}: {{i.value}} - {{i.person}}
+                        <button type="submit", name="item_delete", value="{{i.name}}">-</button>
+                    </p>
                 {% endfor %}
             </div>
         </form>

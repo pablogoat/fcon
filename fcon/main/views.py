@@ -86,6 +86,20 @@ def reckon(response, name):
             view = Sheet.objects.get(name=response.POST.get("show"))
             
             return HttpResponseRedirect('/{}/transactions'.format(view.name))
+        elif response.POST.get("item_delete"):
+            view = Sheet.objects.get(name=name)
+            item = Item.objects.get(sheet=view, name=response.POST.get("item_delete"))
+
+            item.person.balance += item.value
+            item.person.save()
+
+            for debtor in Debtor.objects.filter(item=item):
+                debtor.person.balance -= debtor.share/100 * item.value
+                debtor.person.save()
+
+            item.delete()
+
+            return HttpResponseRedirect('/sheets/', {})
         else:
             return HttpResponseRedirect('/', {})
 
@@ -99,7 +113,7 @@ def reckon(response, name):
 
         return render(response, "main/reckon.html", {"view": view, "people": people, "items": items})
 
-def debet(response, name, new_item): #function for spliting expense among people
+def debet(response, name, new_item): #function for spliting an expense among people
 
     view = Sheet.objects.get(name=name)
 
@@ -143,15 +157,15 @@ def transactions(response, name): #function that shows transactions needed to co
     debtors = [person for person in Person.objects.filter(sheet=view) if person.balance > 0]
     collectors = [person for person in Person.objects.filter(sheet=view) if person.balance < 0]
 
-    debtors.sort(reverse=True, key=PersonCmp)
-    collectors.sort(reverse=True, key=PersonCmp)
+    debtors.sort(reverse=True, key=PersonCmp) # sorting debtors that the one with the highest bill comes first
+    collectors.sort(reverse=True, key=PersonCmp) # sorting collectors that the one with the lowest balance comes first
 
     print(debtors)
     print(collectors)
 
     actions = []
 
-    while len(debtors) and len(collectors):
+    while len(debtors) and len(collectors): # create transactions till run out of debtors and collectors
         if debtors[0].balance < collectors[0].balance * -1:
             actions.append(transaction(debtors[0].name,str(round(debtors[0].balance,2)),collectors[0].name))
             collectors[0].balance += debtors[0].balance

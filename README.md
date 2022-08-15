@@ -12,22 +12,24 @@ In the field "name" you can write down your friend's name and click
 "Add a new person to the sheet" to include him in future reckonings.
 Every person's name has to be unique.
 ## Adding items
-In order to add an item type in item name below "Item" label,
+In order to add an item, type in item name below "Item" label,
 type in cost of that item and then choose person who pays for the item below
 "Buyer" label.
 You can type in person that is not yet included - the system will add that
 person to the data base automatically.
 Both people and items show up under the form.
+## Deleting items
+Items can be deleted by clicking the '-' button.
+Each item has his own button placed next to it.
 ## Transactions
 After clicking the "Show transactions" button, system will calculate
 transactions that have to be done in order to even everyones bills.
 
 ## To Do:
 
-- deleting items
 - enhance apperance
 - user accounts
-- display information about debetors for each item
+- display information about debtors for each item
 - labels
 - validating input
 - fix cancel during choosing debtors
