@@ -29,7 +29,6 @@ transactions that have to be done in order to even everyones bills.
 
 - enhance apperance
 - user accounts
-- display information about debtors for each item
 - labels
 - validating input
 - fix cancel during choosing debtors

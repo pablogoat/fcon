@@ -9,11 +9,13 @@ from main.transaction import transaction
 
 # Create your views here.
 
-def home(response):
+# base home page
+def home(response): 
 
     return render(response, "main/home.html", {})
 
-def create(response):
+# page for creating new sheet
+def create(response): 
     if response.method == 'POST':
         print(response.POST)
         form = sheetCreator(response.POST)
@@ -28,7 +30,8 @@ def create(response):
 
         return render(response, "main/create.html", {"form": form})
 
-def allsheets(response):
+# page displaying all sheets
+def allsheets(response): 
 
     if response.method == 'POST':
         print(response.POST)
@@ -40,6 +43,7 @@ def allsheets(response):
 
         return render(response, "main/sheets.html", {"sheets": t})
 
+# page displaying one chosen sheet
 def reckon(response, name):
 
     if response.method == 'POST':
@@ -110,10 +114,13 @@ def reckon(response, name):
         for item in Item.objects.filter(sheet=view):
             item.value = round(item.value,2)
         items = [i for i in Item.objects.filter(sheet=view)]
+        debtors = [[i.person.name for i in Debtor.objects.filter(item=j)] for j in Item.objects.filter(sheet=view)]
+        print(debtors)
 
-        return render(response, "main/reckon.html", {"view": view, "people": people, "items": items})
+        return render(response, "main/reckon.html", {"view": view, "people": people, "items": items, "debtors": debtors})
 
-def debet(response, name, new_item): #function for spliting an expense among people
+#function for spliting an expense among people
+def debet(response, name, new_item): 
 
     view = Sheet.objects.get(name=name)
 
@@ -152,20 +159,24 @@ def debet(response, name, new_item): #function for spliting an expense among peo
 
         return render(response, "main/debet.html", {"debt": debt, "view": view, "item": Item.objects.get(sheet=view, name=new_item)})
 
-def transactions(response, name): #function that shows transactions needed to complete the reckoning
+#function that shows transactions needed to complete the reckoning
+def transactions(response, name): 
     view = Sheet.objects.get(name=name)
     debtors = [person for person in Person.objects.filter(sheet=view) if person.balance > 0]
     collectors = [person for person in Person.objects.filter(sheet=view) if person.balance < 0]
 
-    debtors.sort(reverse=True, key=PersonCmp) # sorting debtors that the one with the highest bill comes first
-    collectors.sort(reverse=True, key=PersonCmp) # sorting collectors that the one with the lowest balance comes first
+    # sorting debtors that the one with the highest bill comes first
+    debtors.sort(reverse=True, key=PersonCmp)
+    # sorting collectors that the one with the lowest balance comes first
+    collectors.sort(reverse=True, key=PersonCmp)
 
     print(debtors)
     print(collectors)
 
     actions = []
 
-    while len(debtors) and len(collectors): # create transactions till run out of debtors and collectors
+    # create transactions till run out of debtors and collectors
+    while len(debtors) and len(collectors): 
         if debtors[0].balance < collectors[0].balance * -1:
             actions.append(transaction(debtors[0].name,str(round(debtors[0].balance,2)),collectors[0].name))
             collectors[0].balance += debtors[0].balance

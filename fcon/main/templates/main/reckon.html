@@ -46,7 +46,14 @@
                 {% for i in items %}
                     <p> 
                         <button type="submit", name="item_delete", value="{{i.name}}">-</button>
-                        {{i.name}}: {{i.value}} - {{i.person}}
+                        {{i.name}}: {{i.value}} - {{i.person}} for
+                        {% for j in debtors %}
+                            {% if forloop.counter == forloop.parentloop.counter %}
+                                {% for k in j %}
+                                {{k}}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
                     </p>
                 {% endfor %}
             </div>
