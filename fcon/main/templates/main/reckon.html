@@ -45,8 +45,8 @@
                 <h3>Items</h3>
                 {% for i in items %}
                     <p> 
-                        {{i.name}}: {{i.value}} - {{i.person}}
                         <button type="submit", name="item_delete", value="{{i.name}}">-</button>
+                        {{i.name}}: {{i.value}} - {{i.person}}
                     </p>
                 {% endfor %}
             </div>
