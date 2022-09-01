@@ -31,4 +31,4 @@ transactions that have to be done in order to even everyones bills.
 - user accounts
 - labels
 - validating input
-- fix cancel during choosing debtors
+- fix cancel on choosing debtors

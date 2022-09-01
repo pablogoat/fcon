@@ -47,11 +47,13 @@ def allsheets(response):
 def reckon(response, name):
 
     if response.method == 'POST':
+        # delete sheet
         if response.POST.get("delete"):
             view = Sheet.objects.get(name=response.POST.get("delete"))
             view.delete()
 
             return HttpResponseRedirect('/sheets/', {})
+        # add new person
         elif response.POST.get("addperson"):
             view = Sheet.objects.get(name=response.POST.get("addperson"))
             
@@ -61,6 +63,7 @@ def reckon(response, name):
                 person.save()
 
             return HttpResponseRedirect('/sheets/', {})
+        # add new item
         elif response.POST.get("additem"):
             view = Sheet.objects.get(name=response.POST.get("additem"))
 
@@ -86,10 +89,12 @@ def reckon(response, name):
                     new_item.save()
 
             return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
+        # summarize reckoning
         elif response.POST.get("show"):
             view = Sheet.objects.get(name=response.POST.get("show"))
             
             return HttpResponseRedirect('/{}/transactions'.format(view.name))
+        # delete item
         elif response.POST.get("item_delete"):
             view = Sheet.objects.get(name=name)
             item = Item.objects.get(sheet=view, name=response.POST.get("item_delete"))
@@ -107,6 +112,7 @@ def reckon(response, name):
         else:
             return HttpResponseRedirect('/', {})
 
+    # default
     else:
         view = Sheet.objects.get(name=name)
         print(view)
