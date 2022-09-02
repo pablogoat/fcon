@@ -7,38 +7,49 @@
             {% csrf_token %}
             <button type="submit", name="delete", value="{{view.name}}">Delete this sheet</button>
             <button type="submit", name="show", value="{{view.name}}">Show transactions</button>
-            <div>
-                <p>
+        </form>
+        
+        <div>
+            <p>
+                <form method="post", action="/reckon/{{view.name}}">
+                    {% csrf_token %}
                     <label for="data">Name</label>
-                    <input type="text", id="data", name="data">
-                    <button type="submit", name="addperson", value="{{view.name}}">Add a new person to the sheet</button>                    
-                </p>
-                <p>
+                    {{addperson.name}}
+                    <button type="submit", name="addperson", value="{{view.name}}">Add a new person to the sheet</button>  
+                </form>
+                                    
+            </p>
+            <p>
+                <form method="post", action="/reckon/{{view.name}}">
+                    {% csrf_token %}
                     <label for="pay">Buyer</label>
-                    <input list="participants" id="pay" name="pay" width="40">
-
-                    <datalist id="participants">
+                    
+                    <select name="pay" id="pay">
                         {% for i in people %}
-                            <option value="{{i}}">{{i.name}}</option>
+                            <option value="{{i.name}}">{{i.name}}</option>
                         {% endfor %}
-                    </datalist>
+                    </select>
 
                     <label for="item">Item</label>
-                    <input type="text", id="item" name="item" width="40">
+                    {{additem.item}}
 
                     <label for="value">Cost</label>
-                    <input type="text", id="value" name="value" width="40">
+                    {{additem.value}}
 
-                    <button type="submit", name="additem", value="{{view.name}}">Add new item to the sheet</button> 
-                </p>            
-            </div>
-            <div>
-                <h3>Participants</h3>
-                {% for i in people %}
-                    <p>{{i.name}}</p>
-                {% endfor %}
-            </div>
-            <div>
+                    <button type="submit", name="additem", value="{{view.name}}">Add new item to the sheet</button>
+                </form>
+                    
+            </p>            
+        </div>
+        <div>
+            <h3>Participants</h3>
+            {% for i in people %}
+                <p>{{i.name}}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <form method="post", action="/reckon/{{view.name}}">
+                {% csrf_token %}
                 <h3>Items</h3>
                 {% for i in items %}
                     <p> 
@@ -53,8 +64,9 @@
                         {% endfor %}
                     </p>
                 {% endfor %}
-            </div>
-        </form>
-        
+            </form>
+            
+        </div>
+    
     </div>
 {% endblock content %}

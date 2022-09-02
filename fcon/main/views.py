@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 
 from main.models import Person, Sheet, Item, Debtor
-from .forms import sheetCreator
+from .forms import addItem, addPerson, sheetCreator
 from main.transaction import transaction
 
 # Create your views here.
@@ -56,9 +56,10 @@ def reckon(response, name):
         # add new person
         elif response.POST.get("addperson"):
             view = Sheet.objects.get(name=response.POST.get("addperson"))
+            addperson = addPerson(response.POST)
             
-            if response.POST.get("data"):
-                person = Person(sheet=view, name=response.POST.get("data"))
+            if addperson.is_valid():
+                person = Person(sheet=view, name=addperson.cleaned_data["name"])
                 print(person)
                 person.save()
 
@@ -66,12 +67,19 @@ def reckon(response, name):
         # add new item
         elif response.POST.get("additem"):
             view = Sheet.objects.get(name=response.POST.get("additem"))
+            additem = addItem(response.POST)
 
-            postItem = response.POST.get("item")
             postPay = response.POST.get("pay")
-            postValue = float(response.POST.get("value"))
+            print(postPay)
 
-            if postItem and postPay and postValue:                
+            if additem.is_valid():
+
+                postValue = additem.cleaned_data["value"]
+                postItem = additem.cleaned_data["item"] 
+                print("||||||||||||")
+                print(postValue)
+                print(postItem)
+
                 if Person.objects.filter(sheet=view, name=postPay).exists():
                     new_item = Item(sheet=view, person=Person.objects.get(sheet=view, name=postPay), name=postItem, value=postValue)
                     print(new_item)
@@ -88,7 +96,9 @@ def reckon(response, name):
                     print(new_item)
                     new_item.save()
 
-            return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
+                return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
+
+            return HttpResponseRedirect('/reckon/{}'.format(view.name))
         # summarize reckoning
         elif response.POST.get("show"):
             view = Sheet.objects.get(name=response.POST.get("show"))
@@ -123,7 +133,12 @@ def reckon(response, name):
         debtors = [[i.person.name for i in Debtor.objects.filter(item=j)] for j in Item.objects.filter(sheet=view)]
         print(debtors)
 
-        return render(response, "main/reckon.html", {"view": view, "people": people, "items": items, "debtors": debtors})
+        addperson = addPerson()
+        additem = addItem()
+
+        return render(response, "main/reckon.html",
+            {"view": view, "people": people, "items": items, "debtors": debtors,
+            "addperson": addperson, "additem": additem})
 
 #function for spliting an expense among people
 def debet(response, name, new_item): 
@@ -131,6 +146,7 @@ def debet(response, name, new_item):
     view = Sheet.objects.get(name=name)
 
     if response.method == 'POST':
+
         sum_share = 100
         count = 0
 
@@ -156,14 +172,15 @@ def debet(response, name, new_item):
                 new_Debtor.person.save()
                 new_Debtor.save()
                 print(str(new_Debtor.item) + " " + new_Debtor.person.name + " " + str(new_Debtor.share))
-        
+            
         return HttpResponseRedirect('/sheets/', {})
 
     
     else:
         debt = [i for i in Person.objects.filter(sheet=view)]
 
-        return render(response, "main/debet.html", {"debt": debt, "view": view, "item": Item.objects.get(sheet=view, name=new_item)})
+        return render(response, "main/debet.html",
+        {"debt": debt, "view": view, "item": Item.objects.get(sheet=view, name=new_item)})
 
 #function that shows transactions needed to complete the reckoning
 def transactions(response, name): 
