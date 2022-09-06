@@ -215,7 +215,7 @@ def transactions(response, name):
 
     print(actions)
 
-    return render(response, 'main/transactions.html', {"actions": actions})
+    return render(response, 'main/transactions.html', {"actions": actions, "sheet": view})
 
 def PersonCmp(p1):
     
