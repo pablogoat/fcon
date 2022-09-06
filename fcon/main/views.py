@@ -96,6 +96,9 @@ def reckon(response, name):
                     print(new_item)
                     new_item.save()
 
+                view.unapproved_item = postItem
+                view.save()
+
                 return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
 
             return HttpResponseRedirect('/reckon/{}'.format(view.name))
@@ -126,6 +129,22 @@ def reckon(response, name):
     else:
         view = Sheet.objects.get(name=name)
         print(view)
+
+        # if user quits splitting an expense the item gets deleted
+        if view.unapproved_item != '':
+            item_to_delete = Item.objects.get(sheet=view, name=view.unapproved_item)
+
+            item_to_delete.person.balance += item_to_delete.value
+            item_to_delete.person.save()
+
+            for debtor in Debtor.objects.filter(item=item_to_delete):
+                debtor.person.balance -= debtor.share/100 * item_to_delete.value
+                debtor.person.save()
+
+            item_to_delete.delete()
+            view.unapproved_item = ''
+            view.save()
+
         people = [i for i in Person.objects.filter(sheet=view)]
         for item in Item.objects.filter(sheet=view):
             item.value = round(item.value,2)
@@ -172,7 +191,10 @@ def debet(response, name, new_item):
                 new_Debtor.person.save()
                 new_Debtor.save()
                 print(str(new_Debtor.item) + " " + new_Debtor.person.name + " " + str(new_Debtor.share))
-            
+
+        view.unapproved_item = ''
+        view.save()
+
         return HttpResponseRedirect('/sheets/', {})
 
     

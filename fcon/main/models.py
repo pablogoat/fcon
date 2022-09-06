@@ -5,6 +5,7 @@ from django.db import models
 
 class Sheet(models.Model):
     name = models.CharField(max_length=30)
+    unapproved_item = models.CharField(max_length=30 ,default='')
 
     def __str__(self):
         return self.name
