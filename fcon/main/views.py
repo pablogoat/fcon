@@ -23,6 +23,7 @@ def create(response):
         if form.is_valid():
             t = Sheet(name=form.cleaned_data["name"])
             t.save()
+            response.user.sheet.add(t)
 
         return HttpResponseRedirect('/', {})
     else:
@@ -38,10 +39,13 @@ def allsheets(response):
 
         return HttpResponseRedirect('/reckon/%s' %response.POST.get("edit"))
 
-    else:
-        t = Sheet.objects.all()
+    elif response.user.is_authenticated:
+        #t = Sheet.objects.all()
+        t = response.user.sheet.all()
 
         return render(response, "main/sheets.html", {"sheets": t})
+    else:
+        return render(response, "main/sheets.html", {"sheets": ()})
 
 # page displaying one chosen sheet
 def reckon(response, name):
@@ -49,13 +53,13 @@ def reckon(response, name):
     if response.method == 'POST':
         # delete sheet
         if response.POST.get("delete"):
-            view = Sheet.objects.get(name=response.POST.get("delete"))
+            view = Sheet.objects.get(user=response.user, name=response.POST.get("delete"))
             view.delete()
 
             return HttpResponseRedirect('/sheets/', {})
         # add new person
         elif response.POST.get("addperson"):
-            view = Sheet.objects.get(name=response.POST.get("addperson"))
+            view = Sheet.objects.get(user=response.user, name=response.POST.get("addperson"))
             addperson = addPerson(response.POST)
             
             if addperson.is_valid():
@@ -66,7 +70,7 @@ def reckon(response, name):
             return HttpResponseRedirect('/sheets/', {})
         # add new item
         elif response.POST.get("additem"):
-            view = Sheet.objects.get(name=response.POST.get("additem"))
+            view = Sheet.objects.get(user=response.user, name=response.POST.get("additem"))
             additem = addItem(response.POST)
 
             postPay = response.POST.get("pay")
@@ -104,12 +108,12 @@ def reckon(response, name):
             return HttpResponseRedirect('/reckon/{}'.format(view.name))
         # summarize reckoning
         elif response.POST.get("show"):
-            view = Sheet.objects.get(name=response.POST.get("show"))
+            view = Sheet.objects.get(user=response.user, name=response.POST.get("show"))
             
             return HttpResponseRedirect('/{}/transactions'.format(view.name))
         # delete item
         elif response.POST.get("item_delete"):
-            view = Sheet.objects.get(name=name)
+            view = Sheet.objects.get(user=response.user, name=name)
             item = Item.objects.get(sheet=view, name=response.POST.get("item_delete"))
 
             item.person.balance += item.value
@@ -127,7 +131,7 @@ def reckon(response, name):
 
     # default
     else:
-        view = Sheet.objects.get(name=name)
+        view = Sheet.objects.get(user=response.user, name=name)
         print(view)
 
         # if user quits splitting an expense the item gets deleted
@@ -162,7 +166,7 @@ def reckon(response, name):
 #function for spliting an expense among people
 def debet(response, name, new_item): 
 
-    view = Sheet.objects.get(name=name)
+    view = Sheet.objects.get(user=response.user, name=name)
 
     if response.method == 'POST':
 
@@ -206,7 +210,7 @@ def debet(response, name, new_item):
 
 #function that shows transactions needed to complete the reckoning
 def transactions(response, name): 
-    view = Sheet.objects.get(name=name)
+    view = Sheet.objects.get(user=response.user, name=name)
     debtors = [person for person in Person.objects.filter(sheet=view) if person.balance > 0]
     collectors = [person for person in Person.objects.filter(sheet=view) if person.balance < 0]
 

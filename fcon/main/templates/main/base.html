@@ -40,15 +40,28 @@
     <body>
 
         <div class="sidenav">
-            <a href="/">Home Page</a>
-            <a href="/create">New Reckoning</a>
-            <a href="/sheets">My Reckonings</a>
+            {% if user.is_authenticated %}
+                <a href="/">Home Page</a>
+                <a href="/create">New Reckoning</a>
+                <a href="/sheets">My Reckonings</a>
+                <a href="/logout">Log out</a>
+            {% else %}
+                <a href="/login">Log in</a>
+                <a href="/register">Sign in</a>
+            {% endif %}
+            
         </div>
 
         <div class="main">
-            {% block content %}
-            base
-            {% endblock %}
+            {% if user.is_authenticated %}
+                {% block content %}
+                base
+                {% endblock %}
+            {% else %}
+            <p>Not logged in</p>
+                {% block log_in %}
+                {% endblock %}
+            {% endif %}
         </div>
     <body>
 

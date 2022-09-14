@@ -28,5 +28,5 @@ transactions that have to be done in order to even everyones bills.
 ## To Do:
 
 - enhance apperance
-- user accounts
 - validating input
+- fix 0 transactions

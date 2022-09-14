@@ -1,9 +1,11 @@
 from tkinter import CASCADE
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 class Sheet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sheet", null=True)
     name = models.CharField(max_length=30)
     unapproved_item = models.CharField(max_length=30 ,default='')
 
