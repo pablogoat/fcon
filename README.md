@@ -15,8 +15,6 @@ Every person's name has to be unique.
 In order to add an item, type in item name below "Item" label,
 type in cost of that item and then choose person who pays for the item below
 "Buyer" label.
-You can type in person that is not yet included - the system will add that
-person to the data base automatically.
 Both people and items show up under the form.
 ## Deleting items
 Items can be deleted by clicking the '-' button.

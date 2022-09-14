@@ -40,7 +40,6 @@ def allsheets(response):
         return HttpResponseRedirect('/reckon/%s' %response.POST.get("edit"))
 
     elif response.user.is_authenticated:
-        #t = Sheet.objects.all()
         t = response.user.sheet.all()
 
         return render(response, "main/sheets.html", {"sheets": t})
