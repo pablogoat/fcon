@@ -12,7 +12,8 @@ from main.transaction import transaction
 # base home page
 def home(response): 
 
-    return render(response, "main/home.html", {})
+    color = "#00ff00"
+    return render(response, "main/home.html", {"col": color})
 
 # page for creating new sheet
 def create(response): 
