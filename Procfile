@@ -1,1 +1,1 @@
-web: gunicorn fcon.wsgi --log-file -
+web: gunicorn fcon.fcon.wsgi --log-file -
