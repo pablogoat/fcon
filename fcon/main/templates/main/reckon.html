@@ -11,48 +11,50 @@
         </form>
         
         <div>
-            <p>
-                <form method="post", action="/reckon/{{view.name}}">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label for="data" class="input-group-text">Name</label>
-                        </div>
-                        {{addperson.name}}
-                        <button type="submit", name="addperson", value="{{view.name}}" class="btn btn-primary btn-sm">Add a new person to the sheet</button>
-                    </div> 
-                </form>
-                                    
-            </p>
-            <p>
-                <form method="post", action="/reckon/{{view.name}}">
-                    {% csrf_token %}
-                    
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label for="pay" class="input-group-text">Buyer</label>              
-                        </div>
-                        <select name="pay" id="pay">
-                            {% for i in people %}
-                                <option value="{{i.name}}">{{i.name}}</option>
-                            {% endfor %}
-                        </select>
+            <div>
+                <p>
+                    <form method="post", action="/reckon/{{view.name}}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <label for="data" class="input-group-text">Name</label>
+                            </div>
+                            {{addperson.name}}
+                            <button type="submit", name="addperson", value="{{view.name}}" class="btn btn-primary btn-sm">Add a new person to the sheet</button>
+                        </div> 
+                    </form>
+                                        
+                </p>
+                <p>
+                    <form method="post", action="/reckon/{{view.name}}">
+                        {% csrf_token %}
+                        
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <label for="pay" class="input-group-text">Buyer</label>              
+                            </div>
+                            <select name="pay" id="pay">
+                                {% for i in people %}
+                                    <option value="{{i.name}}">{{i.name}}</option>
+                                {% endfor %}
+                            </select>
 
-                        <div class="input-group-prepend">
-                            <label for="item" class="input-group-text">Item</label>              
-                        </div>
-                        {{additem.item}}
+                            <div class="input-group-prepend">
+                                <label for="item" class="input-group-text">Item</label>              
+                            </div>
+                            {{additem.item}}
 
-                        <div class="input-group-prepend">
-                            <label for="value" class="input-group-text">Cost</label>                 
+                            <div class="input-group-prepend">
+                                <label for="value" class="input-group-text">Cost</label>                 
+                            </div>
+                            {{additem.value}}
+                            <button type="submit", name="additem", value="{{view.name}}" class="btn btn-primary btn-sm">Add new item to the sheet</button>
                         </div>
-                        {{additem.value}}
-                        <button type="submit", name="additem", value="{{view.name}}" class="btn btn-primary btn-sm">Add new item to the sheet</button>
-                    </div>
-                    
-                </form>
-                    
-            </p>            
+                        
+                    </form>
+                        
+                </p>            
+            </div>
         </div>
         <div>
             <h3>Participants</h3>
