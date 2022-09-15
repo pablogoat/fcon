@@ -1,1 +1,1 @@
-web: gunicorn friend-reckoning.wsgi --log-file -
+web: gunicorn fcon.wsgi --log-file -
