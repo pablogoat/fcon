@@ -5,10 +5,14 @@
     <form method="post" action="/create/">
         {% csrf_token %}
         <div> 
-            <p>Name of the sheet: {{form.name}}</p>
-            <div>
-                <button type="submit", name="save">Create</button>
-            </div>
+            
+            <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">Name of the sheet</span>
+                </div>
+                {{form.name}}
+                <button type="submit", name="save" class="btn btn-primary btn-sm" >Create</button>
+              </div>
         </div>
     </form>
 {% endblock %}

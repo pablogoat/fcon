@@ -8,8 +8,13 @@
                 {% csrf_token %}
                 {% for item in sheets %}
                 <p>
-                    {{item.name}}
-                    <button type="submit", name="edit", value="{{item.name}}">Edit</button>
+                    
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="">{{item.name}}</span>
+                        </div>
+                        <button type="submit", name="edit", value="{{item.name}}" class="btn btn-primary btn-sm">Edit</button>
+                      </div>
                 </p>
                 {% endfor %}
             </form>

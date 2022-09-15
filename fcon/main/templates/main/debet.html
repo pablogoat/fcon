@@ -6,12 +6,18 @@
             {% csrf_token %}
             {% for person in debt %}
                 <p>
-                    <input type="checkbox" name="{{person.name}}" value="clicked">
-                    <input type="text" value="{{person.name}}" readonly="readonly">
-                    <input type="text" name="d{{person.name}}">
+
+                        <div class="input-group">
+                            <div class="btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-secondary">
+                                  <input type="checkbox" name="{{person.name}}" value="clicked"> {{person.name}}
+                                </label>
+                              </div>
+                            <input type="text" name="d{{person.name}}">
+                        </div>
                 </p>          
             {% endfor %}
-            <button type="submit" name="split_expense">Apply</button>
+            <button type="submit" name="split_expense" class="btn btn-primary btn-sm">Apply</button>
         </form>
         
     </div>
