@@ -1,4 +1,6 @@
 
+### URL to access the site: https://friend-reckoning.herokuapp.com
+
 ## *Still in development*
 
 # Bill splitting app
@@ -28,3 +30,4 @@ transactions that have to be done in order to even everyones bills.
 - enhance apperance
 - validating input
 - fix 0 transactions
+- mobile
