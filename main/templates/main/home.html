@@ -1,7 +1,57 @@
 {% extends 'main/base.html' %}
 
-{% block content %}
+{% block home %}
     <div>
-        <p>Hello <span style="color: #00ff00">{{user.username}}</span></p>
+        <p>Hello, welcome to the bill splitting app <span style="color: #00ff00">{{user.username}}</span></p>
+        <p>
+            <p>
+                <span style="color: #130477; font-size:large" >## Bill splitting app <p></p></span>
+                The app can be used to organise spendings among friends.
+            </p>
+            
+            <p>
+                <span style="color: #130477; font-size:large" >## Adding new project and displaying it <p></p></span>
+                Firstly add a new sheet that represents one project.
+                You can achieve that through page "New Reckoning".
+                Sheets can be viewed through "My Reckonings" page.
+            </p>
+            
+            <p>
+                <span style="color: #130477; font-size:large" >## Adding friends <p></p></span> 
+                In the field "name" you can write down your friend's name and click
+                "Add a new person to the sheet" to include him in future reckonings.
+                Every person's name has to be unique.
+            </p>
+            
+            <p>
+                <span style="color: #130477; font-size:large" >## Adding items <p></p></span>
+                In order to add an item, type in item name below "Item" label,
+                type in cost of that item and then choose person who pays for the item below
+                "Buyer" label.
+                Both people and items show up under the form.
+            </p>
+
+            <p>
+                <span style="color: #130477; font-size:large" >## Adding items <p></p></span>
+                In order to add an item, type in item name below "Item" label,
+                type in cost of that item and then choose person who pays for the item below
+                "Buyer" label.
+                Both people and items show up under the form.
+            </p>
+            
+            <p>
+                <span style="color: #130477; font-size:large" >## Deleting items <p></p></span>
+                Items can be deleted by clicking the '-' button.
+                Each item has his own button placed next to it.
+            </p>
+            
+            <p>
+                <span style="color: #130477; font-size:large" >## Transactions <p></p></span>
+                After clicking the "Show transactions" button, system will calculate
+                transactions that have to be done in order to even everyones bills.
+                <p></p>
+            </p>
+            
+        </p>
     </div>
 {% endblock %}

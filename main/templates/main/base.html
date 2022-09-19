@@ -29,6 +29,7 @@
 
             .main {
                 margin-top: 150px;
+                margin-bottom: 50px;
                 margin-left: 180px;
                 margin-right: 200px;
                 padding: 0px 10px;
@@ -43,6 +44,11 @@
             .input-group-text {
                 color: white !important;
                 background-color: #050122 !important;
+            }
+
+            .input-group {
+                margin-bottom: 20px;
+                margin-top: 20px;
             }
 
             .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
@@ -74,6 +80,7 @@
                 <a href="/sheets">My Reckonings</a>
                 <a href="/logout">Log out</a>
             {% else %}
+                <a href="/">Home Page</a>
                 <a href="/login">Log in</a>
                 <a href="/register">Sign in</a>
             {% endif %}
@@ -85,13 +92,15 @@
                 <div class="col-11">
                     {% if user.is_authenticated %}
                         {% block content %}
-                            base
-                        {% endblock %}
+                        {% endblock content %}
                     {% else %}
-                        <p>Not logged in</p>
+                        <a href="/login">You are not logged in</a>
+                        <p>Sample account is "test" "qwe123123"</p>
                         {% block log_in %}
-                        {% endblock %}
+                        {% endblock log_in %} 
                     {% endif %}
+                    {% block home %}
+                    {% endblock home %}
                 </div>
             </div>
         </div>
