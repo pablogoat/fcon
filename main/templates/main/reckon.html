@@ -66,19 +66,32 @@
             <form method="post", action="/reckon/{{view.name}}">
                 {% csrf_token %}
                 <h3>Items</h3>
-                {% for i in items %}
-                    <p> 
-                        <button type="submit", name="item_delete", value="{{i.name}}" class="btn btn-primary btn-sm">-</button>
-                        {{i.name}}: {{i.value}} - {{i.person}} for
-                        {% for j in debtors %}
-                            {% if forloop.counter == forloop.parentloop.counter %}
-                                {% for k in j %}
-                                {{k}}
+                <table class="table table-hover">
+                    <tr>
+                        <th>Action</th>
+                        <th>Item name</th>
+                        <th>Price</th>
+                        <th>Byuer</th>
+                        <th>Collectors</th>
+                    </tr>
+                    {% for i in items %}
+                        <tr>
+                            <td><button type="submit", name="item_delete", value="{{i.name}}" class="btn btn-primary btn-sm">-</button></td>
+                            <td>{{i.name}}</td>
+                            <td>{{i.value}}</td>
+                            <td>{{i.person}}</td>
+                            <td>
+                                {% for j in debtors %}
+                                    {% if forloop.counter == forloop.parentloop.counter %}
+                                        {% for k in j %}
+                                        {{k}}
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-                    </p>
-                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </form>
             
         </div>

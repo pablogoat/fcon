@@ -2,9 +2,20 @@
 
 {% block content %}
     <div>
-        {% for action in actions %}
-            <p>{{action.debtor}} gives {{action.value}} to {{action.collector}}</p>
-        {% endfor %}
+        <table class="table table-hover">
+            <tr>
+                <th>Pay</th>
+                <th>Value</th>
+                <th>To</th>
+            </tr>
+            {% for action in actions %}
+                <tr>
+                    <td>{{action.debtor}}</td>
+                    <td>--- {{action.value}} --></td>
+                    <td>{{action.collector}}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
     <p>
         <form action="/reckon/{{sheet.name}}">
