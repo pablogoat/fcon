@@ -1,5 +1,5 @@
 
-### URL to access the site: https://friend-reckoning.herokuapp.com
+~~### URL to access the site: https://friend-reckoning.herokuapp.com~~
 
 ## *Still in development*
 
