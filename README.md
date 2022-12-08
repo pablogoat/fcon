@@ -1,7 +1,11 @@
 
-~~### URL to access the site: https://friend-reckoning.herokuapp.com~~
+~~### URL to access the app: https://friend-reckoning.herokuapp.com~~
 
 ## *Still in development*
+
+# Running project
+Start 'run.bat' with django framework installed and visit the http://127.0.0.1:8000 site.
+In case of link not working, started 'run.bat' should show proper link.
 
 # Bill splitting app
 The app can be used to organise spendings among friends.
