@@ -20,5 +20,23 @@
             </form>
             
         </div>
+        <h3>Your shared sheets:</h3>
+        <div>
+            <form method="post" ,action="sheets/">
+                {% csrf_token %}
+                {% for item in shared %}
+                <p>
+                    
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="">{{item.sheet}}</span>
+                        </div>
+                        <button type="submit", name="edit", value="{{item.name}}" class="btn btn-primary btn-sm">View</button>
+                      </div>
+                </p>
+                {% endfor %}
+            </form>
+            
+        </div>
     </div>
 {% endblock content %}

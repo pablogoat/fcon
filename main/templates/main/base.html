@@ -13,7 +13,6 @@
                 overflow-x: hidden;
                 background-color: #130477;
                 padding-top: 35px;
-                
             }
 
             .sidenav a {
@@ -24,11 +23,16 @@
             }
 
             .sidenav a:hover {
+                text-decoration: none !important;
                 color: blanchedalmond;
+                background-color: #050122;
+                background-size: 80%;
+                border-radius: 25px;
+                padding: 20px;
             }
 
             .main {
-                margin-top: 150px;
+                margin-top: 25px;
                 margin-bottom: 50px;
                 margin-left: 180px;
                 margin-right: 200px;
@@ -38,12 +42,12 @@
             }
 
             .btn-primary {
-                background-color: #130477 !important;
+                background-color: #007bff !important;
             }
 
             .input-group-text {
                 color: white !important;
-                background-color: #050122 !important;
+                background-color: #093361 !important;
             }
 
             .input-group {
@@ -52,8 +56,8 @@
             }
 
             .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
-                background-color: #050122 !important;
-                border-color: #050122 !important;
+                background-color: #093361 !important;
+                border-color: #093361 !important;
             }
 
             .reckon-forms {
@@ -71,8 +75,9 @@
         <title>Friend Reckoning App</title>
     </head>
 
-    <body>
+    <body style="background-color: #d4cefd;">
 
+        <!--
         <div class="sidenav">
             {% if user.is_authenticated %}
                 <a href="/">Home Page</a>
@@ -86,6 +91,42 @@
             {% endif %}
             
         </div>
+        
+        -->
+
+        <!--
+        button primary #130477 !important
+        button secondary #050122 !important
+        #d4cefd
+        #007bff
+        -->
+
+        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-primary">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav mr-auto">
+                    <!--<a class="nav-item nav-link active" href="/">Home<span class="sr-only">(current)</span></a>-->
+                    <a class="nav-item nav-link" href="/">Home</a>
+                    {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="/create">New Reckoning</a>
+                        <a class="nav-item nav-link" href="/sheets">My Reckonings</a>
+                        <a class="nav-item nav-link my-lg-0" href="/logout">Log out</a>
+                        
+                    {% else %}
+                        <a class="nav-item nav-link" href="/login">Log in</a>
+                        <a class="nav-item nav-link" href="/register">Sign in</a>
+                    {% endif %}
+                </div>
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav">
+                    <li>
+                        <span class="navbar-text">
+                            {{user.username}}#{{user.id}}
+                        </span>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </nav>
 
         <div id="content" class="main">
             <div class="row justify-content-center">

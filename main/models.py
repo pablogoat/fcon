@@ -12,6 +12,13 @@ class Sheet(models.Model):
     def __str__(self):
         return self.name
 
+class SharedSheet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sharedsheet", null=True)
+    sheet = models.ForeignKey(Sheet, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + " for " + self.sheet.name
+
 class Person(models.Model):
     sheet = models.ForeignKey(Sheet, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)

@@ -3,8 +3,9 @@ from unicodedata import name
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 
-from main.models import Person, Sheet, Item, Debtor
-from .forms import addItem, addPerson, sheetCreator
+from django.contrib.auth.models import User
+from main.models import Person, Sheet, Item, Debtor, SharedSheet
+from .forms import addItem, addPerson, sheetCreator, linkPerson
 from main.transaction import transaction
 
 # Create your views here.
@@ -41,9 +42,10 @@ def allsheets(response):
         return HttpResponseRedirect('/reckon/%s' %response.POST.get("edit"))
 
     elif response.user.is_authenticated:
-        t = response.user.sheet.all()
+        sheets = response.user.sheet.all()
+        shared = response.user.sharedsheet.all()
 
-        return render(response, "main/sheets.html", {"sheets": t})
+        return render(response, "main/sheets.html", {"sheets": sheets, "shared": shared})
     else:
         return render(response, "main/sheets.html", {"sheets": ()})
 
@@ -126,6 +128,15 @@ def reckon(response, name):
             item.delete()
 
             return HttpResponseRedirect('/sheets/', {})
+        elif response.POST.get("linkperson"):
+            view = Sheet.objects.get(user=response.user, name=response.POST.get("linkperson"))
+            linkperson = linkPerson(response.POST)
+
+            if linkperson.is_valid() and User.objects.get(id=linkperson.cleaned_data["name"]):
+                link = SharedSheet(user=User.objects.get(id=linkperson.cleaned_data["name"]),sheet=view)
+                print(link)
+                link.save()
+            return HttpResponseRedirect('/sheets/', {})
         else:
             return HttpResponseRedirect('/', {})
 
@@ -158,10 +169,11 @@ def reckon(response, name):
 
         addperson = addPerson()
         additem = addItem()
+        linkperson = linkPerson()
 
         return render(response, "main/reckon.html",
             {"view": view, "people": people, "items": items, "debtors": debtors,
-            "addperson": addperson, "additem": additem})
+            "addperson": addperson, "additem": additem, "linkperson": linkperson})
 
 #function for spliting an expense among people
 def debet(response, name, new_item): 
