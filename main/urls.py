@@ -10,9 +10,9 @@ urlpatterns = [
     # list of all reckonings
     path('sheets/', views.allsheets, name="sheets"),
     # given reckoning page
-    path('reckon/<str:name>', views.reckon, name="reckon"),
+    path('reckon/<int:sheetid>', views.reckon, name="reckon"),
     # input debtors for the given item
-    path('reckon/<str:name>/<str:new_item>', views.debet, name="debet"),
+    path('reckon/<int:sheetid>/<str:new_item>', views.debet, name="debet"),
     # show calculated transactions
-    path('<str:name>/transactions', views.transactions, name="transactions")
+    path('<int:sheetid>/transactions', views.transactions, name="transactions")
 ]

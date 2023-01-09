@@ -39,18 +39,19 @@ def allsheets(response):
     if response.method == 'POST':
         print(response.POST)
 
-        return HttpResponseRedirect('/reckon/%s' %response.POST.get("edit"))
+        return HttpResponseRedirect('/reckon/%d' %int(response.POST.get("edit")))
 
     elif response.user.is_authenticated:
         sheets = response.user.sheet.all()
         shared = response.user.sharedsheet.all()
+        shared = list(map(lambda a: a.sheet, shared))
 
         return render(response, "main/sheets.html", {"sheets": sheets, "shared": shared})
     else:
         return render(response, "main/sheets.html", {"sheets": ()})
 
 # page displaying one chosen sheet
-def reckon(response, name):
+def reckon(response, sheetid):
 
     if response.method == 'POST':
         # delete sheet
@@ -105,17 +106,24 @@ def reckon(response, name):
                 view.unapproved_item = postItem
                 view.save()
 
-                return HttpResponseRedirect('/reckon/{}/{}'.format(view.name, postItem))
+                return HttpResponseRedirect('/reckon/{}/{}'.format(view.id, postItem))
 
-            return HttpResponseRedirect('/reckon/{}'.format(view.name))
+            return HttpResponseRedirect('/reckon/{}'.format(view.id))
         # summarize reckoning
         elif response.POST.get("show"):
-            view = Sheet.objects.get(user=response.user, name=response.POST.get("show"))
+            #view = Sheet.objects.get(user=response.user, id=int(response.POST.get("show")))
+            if not Sheet.objects.filter(user=response.user, id=int(response.POST.get("show"))).exists():
+                s = Sheet.objects.get(id=int(response.POST.get("show")))
+                view = SharedSheet.objects.get(user=response.user, sheet=s)
+                if view:
+                    view = view.sheet
+            else:
+                view = Sheet.objects.get(user=response.user, id=sheetid)
             
-            return HttpResponseRedirect('/{}/transactions'.format(view.name))
+            return HttpResponseRedirect('/{}/transactions'.format(view.id))
         # delete item
         elif response.POST.get("item_delete"):
-            view = Sheet.objects.get(user=response.user, name=name)
+            view = Sheet.objects.get(user=response.user, id=sheetid)
             item = Item.objects.get(sheet=view, name=response.POST.get("item_delete"))
 
             item.person.balance += item.value
@@ -129,7 +137,7 @@ def reckon(response, name):
 
             return HttpResponseRedirect('/sheets/', {})
         elif response.POST.get("linkperson"):
-            view = Sheet.objects.get(user=response.user, name=response.POST.get("linkperson"))
+            view = Sheet.objects.get(user=response.user, id=response.POST.get("linkperson"))
             linkperson = linkPerson(response.POST)
 
             if linkperson.is_valid() and User.objects.get(id=linkperson.cleaned_data["name"]):
@@ -142,7 +150,19 @@ def reckon(response, name):
 
     # default
     else:
-        view = Sheet.objects.get(user=response.user, name=name)
+        #view = Sheet.objects.get(user=response.user, id=sheetid)
+        if not Sheet.objects.filter(user=response.user, id=sheetid).exists():
+            s = Sheet.objects.get(id=sheetid)
+            view = SharedSheet.objects.get(user=response.user, sheet=s)
+            if view:
+                view = view.sheet
+        else:
+            view = Sheet.objects.get(user=response.user, id=sheetid)
+        
+        ownership = True
+        if view.user != response.user:
+            ownership = False
+
         print(view)
 
         # if user quits splitting an expense the item gets deleted
@@ -173,12 +193,12 @@ def reckon(response, name):
 
         return render(response, "main/reckon.html",
             {"view": view, "people": people, "items": items, "debtors": debtors,
-            "addperson": addperson, "additem": additem, "linkperson": linkperson})
+            "addperson": addperson, "additem": additem, "linkperson": linkperson, "ownership": ownership})
 
 #function for spliting an expense among people
-def debet(response, name, new_item): 
+def debet(response, sheetid, new_item): 
 
-    view = Sheet.objects.get(user=response.user, name=name)
+    view = Sheet.objects.get(user=response.user, id=sheetid)
 
     if response.method == 'POST':
 
@@ -221,8 +241,16 @@ def debet(response, name, new_item):
         {"debt": debt, "view": view, "item": Item.objects.get(sheet=view, name=new_item)})
 
 #function that shows transactions needed to complete the reckoning
-def transactions(response, name): 
-    view = Sheet.objects.get(user=response.user, name=name)
+def transactions(response, sheetid): 
+    #view = Sheet.objects.get(user=response.user, id=sheetid)
+    if not Sheet.objects.filter(user=response.user, id=sheetid).exists():
+        s = Sheet.objects.get(id=sheetid)
+        view = SharedSheet.objects.get(user=response.user, sheet=s)
+        if view:
+            view = view.sheet
+    else:
+        view = Sheet.objects.get(user=response.user, id=sheetid)
+    
     debtors = [person for person in Person.objects.filter(sheet=view) if person.balance > 0]
     collectors = [person for person in Person.objects.filter(sheet=view) if person.balance < 0]
 
@@ -251,6 +279,10 @@ def transactions(response, name):
             debtors[0].balance += collectors[0].balance
             collectors.pop(0)
 
+    for i in actions:
+        if float(i.value) == 0.0:
+            actions.remove(i)
+            
     print(actions)
 
     return render(response, 'main/transactions.html', {"actions": actions, "sheet": view})

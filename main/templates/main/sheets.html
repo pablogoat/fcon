@@ -13,7 +13,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text" id="">{{item.name}}</span>
                         </div>
-                        <button type="submit", name="edit", value="{{item.name}}" class="btn btn-primary btn-sm">Edit</button>
+                        <button type="submit", name="edit", value="{{item.id}}" class="btn btn-primary btn-sm">Edit</button>
                       </div>
                 </p>
                 {% endfor %}
@@ -29,9 +29,9 @@
                     
                     <div class="input-group">
                         <div class="input-group-prepend">
-                          <span class="input-group-text" id="">{{item.sheet}}</span>
+                          <span class="input-group-text" id="">{{item.name}}</span>
                         </div>
-                        <button type="submit", name="edit", value="{{item.name}}" class="btn btn-primary btn-sm">View</button>
+                        <button type="submit", name="edit", value="{{item.id}}" class="btn btn-primary btn-sm">View</button>
                       </div>
                 </p>
                 {% endfor %}

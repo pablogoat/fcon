@@ -3,29 +3,40 @@
 {% block content %}
     <h3>{{view.name}}</h3>
     <hr>
+    
     <div>
         <div class="input-group">
-            <form method="post", action="/reckon/{{view.name}}">
+            <form method="post", action="/reckon/{{view.id}}">
                 {% csrf_token %}
-                <button type="submit", name="delete", value="{{view.name}}" class="btn btn-primary btn-sm">Delete</button>
+                {% if ownership %}
+                    <button type="submit", name="delete", value="{{view.name}}" class="btn btn-primary btn-sm">Delete</button>
+                {% else %}
+                    <button type="submit" name="delete", value="{{view.name}}" class="btn btn-primary btn-sm disabled" disabled>Delete</button>
+                {% endif %}   
             </form>
-            <form method="post", action="/reckon/{{view.name}}">
+            <form method="post", action="/reckon/{{view.id}}">
                 {% csrf_token %}
-                <button type="submit", name="show", value="{{view.name}}" class="btn btn-primary btn-sm">Show transactions</button>
+                <button type="submit", name="show", value="{{view.id}}" class="btn btn-primary btn-sm">Show transactions</button>
             </form>
         </div>
         
         <p>
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#adding-options" aria-expanded="false" aria-controls="adding-options">
-                Add
-            </button>
+            {% if ownership %}
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#adding-options" aria-expanded="false" aria-controls="adding-options">
+                    Add
+                </button>
+            {% else %}
+                <button class="btn btn-primary disabled" type="button" data-toggle="collapse" data-target="#adding-options" aria-expanded="false" aria-controls="adding-options" disabled>
+                    Add
+                </button>
+            {% endif %}
         </p>
         <div class="collapse" id="adding-options">
             <div class="card card-body">
                 <div>
                     <div>
                         <p>
-                            <form method="post", action="/reckon/{{view.name}}">
+                            <form method="post", action="/reckon/{{view.id}}">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -38,7 +49,7 @@
                                                 
                         </p>
                         <p>
-                            <form method="post", action="/reckon/{{view.name}}">
+                            <form method="post", action="/reckon/{{view.id}}">
                                 {% csrf_token %}
                                 
                                 <div class="input-group">
@@ -84,11 +95,15 @@
                         </div>
                         <div class="collapse" id="{{i.name}}">
                             <div class="card card-body">
-                                    <form method="post", action="/reckon/{{view.name}}">
+                                    <form method="post", action="/reckon/{{view.id}}">
                                         {% csrf_token %}
                                         <div class="input-group">
                                             {{linkperson.name}}
-                                            <button type="submit", name="linkperson", value="{{view.name}}" class="btn btn-primary btn-sm">Link Account</button>
+                                            {% if ownership %}
+                                                <button type="submit", name="linkperson", value="{{view.id}}" class="btn btn-primary btn-sm">Link Account</button>
+                                            {% else %}
+                                                <button type="submit" name="linkperson", value="{{view.id}}" class="btn btn-primary btn-sm disabled" disabled>Link Account</button>
+                                            {% endif %}
                                         </div> 
                                     </form>
                             </div>
@@ -100,7 +115,7 @@
         </div>
         <hr>
         <div>
-            <form method="post", action="/reckon/{{view.name}}">
+            <form method="post", action="/reckon/{{view.id}}">
                 {% csrf_token %}
                 <h3>Items</h3>
                 <table class="table table-hover">
@@ -113,7 +128,12 @@
                     </tr>
                     {% for i in items %}
                         <tr>
-                            <td><button type="submit", name="item_delete", value="{{i.name}}" class="btn btn-primary btn-sm">-</button></td>
+                            {% if ownership %}
+                                <td><button type="submit", name="item_delete", value="{{i.name}}" class="btn btn-primary btn-sm">-</button></td>
+                            {% else %}
+                                <td><button type="submit" name="item_delete", value="{{i.name}}" class="btn btn-primary btn-sm disabled" disabled>-</button></td>
+                            {% endif %}
+                            
                             <td>{{i.name}}</td>
                             <td>{{i.value}}</td>
                             <td>{{i.person}}</td>
