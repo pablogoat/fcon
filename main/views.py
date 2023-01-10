@@ -82,8 +82,8 @@ def reckon(response, sheetid):
             if additem.is_valid():
 
                 postValue = additem.cleaned_data["value"]
-                postItem = additem.cleaned_data["item"] 
-                print("||||||||||||")
+                postItem = additem.cleaned_data["item"]
+                print("||||||||||||") #www
                 print(postValue)
                 print(postItem)
 

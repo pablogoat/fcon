@@ -2,7 +2,9 @@
 
 {% block content %}
     <div>
-        <h3>Your sheets:</h3>
+        {% if sheets %}
+            <h3>Your sheets:</h3>
+        {% endif %}
         <div>
             <form method="post" ,action="sheets/">
                 {% csrf_token %}
@@ -20,7 +22,9 @@
             </form>
             
         </div>
-        <h3>Your shared sheets:</h3>
+        {% if shared %}
+            <h3>Your shared sheets:</h3>
+        {% endif %}
         <div>
             <form method="post" ,action="sheets/">
                 {% csrf_token %}
