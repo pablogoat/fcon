@@ -1,5 +1,5 @@
 
-~~### URL to access the app: https://friend-reckoning.herokuapp.com~~
+### URL to access the app: http://pablogoat.pythonanywhere.com
 
 ## *Still in development*
 

@@ -1,155 +1,84 @@
 <!doctype html>
-<html>
-    <head>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Friend Reckoning App</title>
+</head>
 
-        <style type="text/css">
-            .sidenav {
-                height: 120px;
-                width: 100%;
-                position: fixed;
-                z-index: 1;
-                top: 0;
-                left: 0;
-                overflow-x: hidden;
-                background-color: #130477;
-                padding-top: 35px;
-            }
+<body style="background-color: #d4cefd;">
 
-            .sidenav a {
-                padding: 6px 8px 6px 16px;
-                text-decoration: none;
-                font-size: 30px;
-                color: #C5BAFD;
-            }
-
-            .sidenav a:hover {
-                text-decoration: none !important;
-                color: blanchedalmond;
-                background-color: #050122;
-                background-size: 80%;
-                border-radius: 25px;
-                padding: 20px;
-            }
-
-            .main {
-                margin-top: 25px;
-                margin-bottom: 50px;
-                margin-left: 180px;
-                margin-right: 200px;
-                padding: 0px 10px;
-                border-radius: 10px;
-                background-color: #d4cefd;
-            }
-
-            .btn-primary {
-                background-color: #007bff !important;
-            }
-
-            .input-group-text {
-                color: white !important;
-                background-color: #093361 !important;
-            }
-
-            .input-group {
-                margin-bottom: 20px;
-                margin-top: 20px;
-            }
-
-            .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
-                background-color: #093361 !important;
-                border-color: #093361 !important;
-            }
-
-            .reckon-forms {
-                background-color: #3f23f6;
-                border-radius: 10px;
-            }
-
-        </style>
-
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-        <title>Friend Reckoning App</title>
-    </head>
-
-    <body style="background-color: #d4cefd;">
-
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
         <!--
-        <div class="sidenav">
-            {% if user.is_authenticated %}
-                <a href="/">Home Page</a>
-                <a href="/create">New Reckoning</a>
-                <a href="/sheets">My Reckonings</a>
-                <a href="/logout">Log out</a>
-            {% else %}
-                <a href="/">Home Page</a>
-                <a href="/login">Log in</a>
-                <a href="/register">Sign in</a>
-            {% endif %}
-            
-        </div>
-        
+        <button class="navbar-toggler" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         -->
 
-        <!--
-        button primary #130477 !important
-        button secondary #050122 !important
-        #d4cefd
-        #007bff
-        -->
-
-        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-primary">
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav mr-auto">
-                    <!--<a class="nav-item nav-link active" href="/">Home<span class="sr-only">(current)</span></a>-->
-                    <a class="nav-item nav-link" href="/">Home</a>
-                    {% if user.is_authenticated %}
-                        <a class="nav-item nav-link" href="/create">New Reckoning</a>
-                        <a class="nav-item nav-link" href="/sheets">My Reckonings</a>
-                        <a class="nav-item nav-link my-lg-0" href="/logout">Log out</a>
-                        
-                    {% else %}
-                        <a class="nav-item nav-link" href="/login">Log in</a>
-                        <a class="nav-item nav-link" href="/register">Sign in</a>
-                    {% endif %}
-                </div>
+        <div class="navbar-collapse offcanvas-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
                 {% if user.is_authenticated %}
-                <ul class="navbar-nav">
-                    <li>
-                        <span class="navbar-text">
-                            {{user.username}}#{{user.id}}
-                        </span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/create">New Reckoning</a>
                     </li>
-                </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sheets">My Reckonings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Sign in</a>
+                    </li>
                 {% endif %}
-            </div>
-        </nav>
+            </ul>
+            
+            {% if user.is_authenticated %}
+                <span class="navbar-text">
+                    {{ user.username }}#{{ user.id }}
+                </span>
+            {% endif %}
+        </div>
+    </nav>
 
-        <div id="content" class="main">
-            <div class="row justify-content-center">
-                <div class="col-11">
-                    {% if user.is_authenticated %}
-                        {% block content %}
-                        {% endblock content %}
-                    {% else %}
-                        <a href="/login">You are not logged in</a>
-                        <p>Sample account is "test" "qwe123123"</p>
-                        {% block log_in %}
-                        {% endblock log_in %} 
-                    {% endif %}
-                    {% block home %}
-                    {% endblock home %}
-                </div>
+    <div id="content" class="main">
+        <div class="row justify-content-center">
+            <div class="col-11">
+                {% if user.is_authenticated %}
+                    {% block content %}
+                    {% endblock content %}
+                {% else %}
+                    <a href="/login">You are not logged in</a>
+                    <p>Sample account is "test" "qwe123123"</p>
+                    {% block log_in %}
+                    {% endblock log_in %} 
+                {% endif %}
+                {% block home %}
+                {% endblock home %}
             </div>
         </div>
+    </div>
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <body>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="offcanvas"]').on('click', function () {
+                $('.offcanvas-collapse').toggleClass('open');
+            });
+        });
+    </script>
 
+</body>
 </html>
